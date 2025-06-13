@@ -64,8 +64,8 @@
           )
         ];
       };
-      nixosConfiguration = {
-        personal = nixpkgs.lib.nixosSystem {
+      nixosConfigurations = {
+        default = nixpkgs.lib.nixosSystem {
           inherit system;
           pkgs = import inputs.nixpkgs {
             inherit system;

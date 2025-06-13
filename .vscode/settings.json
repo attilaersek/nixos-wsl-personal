@@ -1,0 +1,15 @@
+{
+  "explorer.excludeGitIgnore": true,
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": {
+        "command": [
+          "nixfmt"
+        ]
+      }
+    }
+  },
+  "editor.formatOnSave": true
+}

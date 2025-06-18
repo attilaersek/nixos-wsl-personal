@@ -56,6 +56,10 @@
 
       home-manager.users.${user} = {
         programs = {
+          bash = {
+            enable = true;
+            historyControl = [ "ignoreboth" ];
+          };
           git = {
             enable = true;
             extraConfig = {

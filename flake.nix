@@ -45,7 +45,7 @@
             }:
             {
               wsl.enable = true;
-              wsl.version.rev = nixpkgs.lib.mkIf (self ? rev) (self.rev);
+              wsl.version.rev = nixpkgs.lib.mkIf (self ? rev) (nixpkgs.lib.mkForce self.rev);
               nixpkgs.flake.source = nixpkgs.lib.mkForce null;
               systemd.tmpfiles.rules =
                 let

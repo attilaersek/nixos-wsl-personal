@@ -55,7 +55,55 @@
       };
 
       home-manager.users.${user} = {
+        programs = {
+          git = {
+            enable = true;
+            extraConfig = {
+              user = {
+                name = "Attila Ersek";
+                email = "ersek.attila@hotmail.com";
+              };
+              commit = {
+                gpgSign = true;
+              };
+              init = {
+                defaultBranch = "main";
+              };
+              merge = {
+                conflictStyle = "zdiff3";
+              };
+              push = {
+                autoSetupRemote = true;
+              };
+            };
+          };
+          gpg = {
+            enable = true;
+          };
+          ssh = {
+            enable = true;
+            extraConfig = ''
+              Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
+            '';
+          };
+        };
+        services = {
+          ssh-agent = {
+            enable = true;
+          };
+          gpg-agent = {
+            enable = true;
+            enableSshSupport = true;
+            enableBashIntegration = true;
+            defaultCacheTtl = 60 * 60 * 4;
+            maxCacheTtl = 60 * 60 * 8;
+            pinentry.package = pkgs.pinentry-curses;
+          };
+        };
         home = {
+          packages = with pkgs; [
+            lastpass-cli
+          ];
           stateVersion = "${config.system.nixos.release}";
           sessionVariables = {
             BROWSER = "wslview";
@@ -96,11 +144,8 @@
             . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           '';
         };
-        gnupg.agent.enable = true;
-        git.enable = true;
         direnv.enable = true;
         starship.enable = true;
-        ssh.startAgent = true;
       };
       virtualisation.docker = {
         enable = true;
@@ -125,6 +170,5 @@
           extra-sandbox-paths = [ "/usr/lib/wsl" ];
         };
       };
-
     };
 }

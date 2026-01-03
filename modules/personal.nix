@@ -51,6 +51,7 @@
           zip
           wslu
           xterm
+          xdg-utils
         ];
       };
 
@@ -60,9 +61,35 @@
             enable = true;
             historyControl = [ "ignoreboth" ];
           };
+          eza = {
+            enable = true;
+            colors = "always";
+            git = true;
+            enableBashIntegration = true;
+          };
+          zoxide = {
+            enable = true;
+            enableBashIntegration = true;
+          };
+          starship = {
+            enable = true;
+            enableBashIntegration = true;
+            settings = {
+              kubernetes = {
+                disabled = false;
+              };
+              status = {
+                disabled = false;
+                style = "bg:blue";
+                symbol = "🔴 ";
+                format = "[\\[$symbol$common_meaning$signal_name$maybe_int\\]]($style)";
+                map_symbol = true;
+              };
+            };
+          };
           git = {
             enable = true;
-            extraConfig = {
+            settings = {
               user = {
                 name = "Attila Ersek";
                 email = "ersek.attila@hotmail.com";
@@ -86,6 +113,19 @@
           };
           ssh = {
             enable = true;
+            enableDefaultConfig = false;
+            matchBlocks."*" = {
+              forwardAgent = false;
+              addKeysToAgent = "no";
+              compression = false;
+              serverAliveInterval = 0;
+              serverAliveCountMax = 3;
+              hashKnownHosts = false;
+              userKnownHostsFile = "~/.ssh/known_hosts";
+              controlMaster = "no";
+              controlPath = "~/.ssh/master-%r@%n:%p";
+              controlPersist = "no";
+            };
             extraConfig = ''
               Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
             '';
@@ -97,13 +137,23 @@
             enableSshSupport = true;
             enableBashIntegration = true;
             defaultCacheTtl = 60 * 60 * 4;
+            defaultCacheTtlSsh = 60 * 60 * 4;
             maxCacheTtl = 60 * 60 * 8;
-            pinentry.package = pkgs.pinentry-curses;
+            maxCacheTtlSsh = 60 * 60 * 8;
+            pinentry.package = pkgs.pinentry-qt;
           };
+          gnome-keyring.enable = true;
         };
         home = {
+          shellAliases = {
+            ll = "eza -la --group-directories-first --git";
+            ls = "eza --group-directories-first --git";
+            gs = "git status";
+            gl = "git log --oneline --graph --decorate";
+          };
           packages = with pkgs; [
             lastpass-cli
+            gcr
           ];
           stateVersion = "${config.system.nixos.release}";
           sessionVariables = {
@@ -146,8 +196,8 @@
           '';
         };
         direnv.enable = true;
-        starship.enable = true;
       };
+
       virtualisation.docker = {
         enable = true;
         enableOnBoot = true;
@@ -159,7 +209,7 @@
       };
 
       nix = {
-        package = pkgs.nixVersions.nix_2_29;
+        package = pkgs.nixVersions.latest;
         settings = {
           experimental-features = [
             "nix-command"

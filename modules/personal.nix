@@ -63,9 +63,10 @@
           };
           eza = {
             enable = true;
-            colors = "always";
-            git = true;
             enableBashIntegration = true;
+            git = true;
+            colors = "always";
+            icons = "always";
           };
           zoxide = {
             enable = true;

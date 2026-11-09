@@ -6,7 +6,7 @@
 {
   config =
     let
-      user = "retk";
+      user = config.settings.username;
     in
     {
       wsl = {
@@ -39,7 +39,7 @@
       };
 
       environment = {
-        etc."wsl.conf".text = '''';
+        etc."wsl.conf".text = "";
         systemPackages = with pkgs; [
           wget
           curl
@@ -49,7 +49,6 @@
           git
           unzip
           zip
-          wslu
           xterm
           xdg-utils
         ];
@@ -67,6 +66,10 @@
             git = true;
             colors = "always";
             icons = "always";
+          };
+          fzf = {
+            enable = true;
+            enableBashIntegration = true;
           };
           zoxide = {
             enable = true;
@@ -91,9 +94,8 @@
           git = {
             enable = true;
             settings = {
-              user = {
-                name = "Attila Ersek";
-                email = "ersek.attila@hotmail.com";
+              user = pkgs.lib.filterAttrs (_: v: v != null) {
+                inherit (config.settings.git) name email;
               };
               commit = {
                 gpgSign = true;
@@ -115,21 +117,19 @@
           ssh = {
             enable = true;
             enableDefaultConfig = false;
-            matchBlocks."*" = {
-              forwardAgent = false;
-              addKeysToAgent = "no";
-              compression = false;
-              serverAliveInterval = 0;
-              serverAliveCountMax = 3;
-              hashKnownHosts = false;
-              userKnownHostsFile = "~/.ssh/known_hosts";
-              controlMaster = "no";
-              controlPath = "~/.ssh/master-%r@%n:%p";
-              controlPersist = "no";
+            settings."*" = {
+              ForwardAgent = false;
+              AddKeysToAgent = "no";
+              Compression = false;
+              ServerAliveInterval = 0;
+              ServerAliveCountMax = 3;
+              HashKnownHosts = false;
+              UserKnownHostsFile = "~/.ssh/known_hosts";
+              ControlMaster = "no";
+              ControlPath = "~/.ssh/master-%r@%n:%p";
+              ControlPersist = "no";
             };
-            extraConfig = ''
-              Match host * exec "gpg-connect-agent UPDATESTARTUPTTY /bye"
-            '';
+            settings."Match host * exec \"gpg-connect-agent UPDATESTARTUPTTY /bye\"" = { };
           };
         };
         services = {
@@ -152,14 +152,13 @@
             gs = "git status";
             gl = "git log --oneline --graph --decorate";
           };
+          sessionPath = [
+            "/home/${user}/.local/bin"
+          ];
           packages = with pkgs; [
-            lastpass-cli
             gcr
           ];
           stateVersion = "${config.system.nixos.release}";
-          sessionVariables = {
-            BROWSER = "wslview";
-          };
         };
       };
 
@@ -168,6 +167,23 @@
       vscode = {
         inherit user;
         enable = true;
+      };
+
+      boot.initrd.kernelModules = [ "amdgpu" ];
+
+      services = {
+        upower.enable = true;
+        xserver.videoDrivers = [ "amdgpu" ];
+      };
+
+      hardware.graphics = {
+        enable = true;
+        enable32Bit = true; # Required for Steam / 32-bit apps
+
+        # Extra packages for AMD hardware video acceleration (VA-API)
+        extraPackages = with pkgs; [
+          rocmPackages.clr.icd # OpenCL support (Optional, good for compute)
+        ];
       };
 
       programs = {

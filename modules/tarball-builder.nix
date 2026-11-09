@@ -15,8 +15,10 @@ let
       fileset = fs.unions [
         ../modules/default.nix
         ../modules/tarball-builder.nix
-        ../modules/personal.nix
+        ../modules/user.nix
         ../modules/vscode.nix
+        ../personal/default.nix
+        (if pathExists ../personal/personal.nix then ../personal/personal.nix else fs.unions [ ])
         ../flake.nix
         ../flake.lock
         ../assets/NixOS-WSL.ico
@@ -74,7 +76,7 @@ in
             --substituters ""
 
           echo "[NixOS-WSL] Adding channel..."
-          nixos-enter --root "$root" --command 'HOME=/root nix-channel --add https://nixos.org/channels/nixos-25.05 nixos'
+          nixos-enter --root "$root" --command 'HOME=/root nix-channel --add https://nixos.org/channels/nixos-26.05 nixos'
           nixos-enter --root "$root" --command 'HOME=/root nix-channel --add https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz nixos-wsl'
           nixos-enter --root "$root" --command 'HOME=/root nix-channel --add https://github.com/attilaersek/nixos-wsl-personal/archive/refs/heads/main.tar.gz nixos-wsl-personal'
 

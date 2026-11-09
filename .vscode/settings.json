@@ -1,5 +1,11 @@
 {
-  "explorer.excludeGitIgnore": true,
+  "files.exclude": {
+    ".git": true,
+    ".direnv": true,
+    "nixos-wsl-personal.wsl": true,
+    "result": true,
+    "personal/personal.nix": false
+  },
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
   "nix.serverSettings": {

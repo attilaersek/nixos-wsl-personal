@@ -2,13 +2,13 @@
   description = "nixos-wsl";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixos-wsl = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/nixos-wsl";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
@@ -36,6 +36,7 @@
           inputs.nixos-wsl.nixosModules.default
           inputs.home-manager.nixosModules.home-manager
           ./modules
+          ./personal
           (
             {
               config,
@@ -83,7 +84,7 @@
         default = pkgs.mkShell {
           packages = [
             pkgs.nil
-            pkgs.nixfmt-rfc-style
+            pkgs.nixfmt
           ];
         };
       });

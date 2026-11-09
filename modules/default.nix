@@ -1,8 +1,9 @@
 { ... }:
 {
   imports = [
+    ./settings.nix
     ./tarball-builder.nix
-    ./personal.nix
+    ./user.nix
     ./vscode.nix
   ];
 }

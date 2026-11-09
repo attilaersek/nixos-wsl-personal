@@ -1,3 +1,5 @@
+personal/personal.nix
+
 ### custom ###
 nixos-wsl-personal.wsl
 

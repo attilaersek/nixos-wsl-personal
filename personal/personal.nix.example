@@ -1,0 +1,10 @@
+{ ... }:
+{
+  settings = {
+    username = "your-user";
+    git = {
+      name = "Your Name";
+      email = "your@email.address";
+    };
+  };
+}
